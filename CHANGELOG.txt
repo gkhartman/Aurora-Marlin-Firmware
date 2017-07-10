@@ -1,0 +1,1 @@
+7-10-2017: Modified stepper motor XY and E step count/mm for better calibration (could use further refining)
