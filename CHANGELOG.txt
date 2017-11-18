@@ -1,1 +1,2 @@
 7-10-2017: Modified stepper motor XY and E step count/mm for better calibration (could use further refining)
+11-17-2017: Updated firmware to version 1.1.6
