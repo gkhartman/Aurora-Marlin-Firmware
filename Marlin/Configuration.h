@@ -684,15 +684,20 @@
  *      O-- FRONT --+
  *    (0,0)
  */
-#define X_PROBE_OFFSET_FROM_EXTRUDER 38  // X offset: -left  +right  [of the nozzle]
-#define Y_PROBE_OFFSET_FROM_EXTRUDER -31  // Y offset: -front +behind [the nozzle]
-#define Z_PROBE_OFFSET_FROM_EXTRUDER 4   // Z offset: -below +above  [the nozzle]
+/* GKH: Z offset is using displacement between nozzle and 
+ *      the point where the inductive probe is triggered.
+ *      -1.4 leaves 0.02mm between nozzle and bed when
+ *      printing mesh validity test using G26.
+ */
+#define X_PROBE_OFFSET_FROM_EXTRUDER 38   // X offset: -left  +right  [of the nozzle]
+#define Y_PROBE_OFFSET_FROM_EXTRUDER -15  // Y offset: -front +behind [the nozzle]
+#define Z_PROBE_OFFSET_FROM_EXTRUDER -1.4 // Z offset: -below +above  [the nozzle]
 
 // X and Y axis travel speed (mm/m) between probes
 #define XY_PROBE_SPEED 8000
 
 // Speed for the first approach when double-probing (MULTIPLE_PROBING == 2)
-#define Z_PROBE_SPEED_FAST HOMING_FEEDRATE_Z
+#define Z_PROBE_SPEED_FAST 2 * HOMING_FEEDRATE_Z
 
 // Speed for the "accurate" probe of each point
 #define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST / 2)
@@ -785,13 +790,13 @@
 #define Y_BED_SIZE 200
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
-//#define X_MIN_POS 20
-//#define Y_MIN_POS 25
-#define X_MIN_POS 0
-#define Y_MIN_POS 0
+//#define X_MIN_POS 0  // GKH: Causes print at (0,0) to start too far to the left of bed
+//#define Y_MIN_POS 0  // GKH: Causes print at (0,0) to start too far in front of bed
+#define X_MIN_POS -20  // GKH: X position when at home
+#define Y_MIN_POS -25  // GKH: Y position when at home
 #define Z_MIN_POS 0
-#define X_MAX_POS X_BED_SIZE + X_MIN_POS
-#define Y_MAX_POS Y_BED_SIZE + Y_MIN_POS
+#define X_MAX_POS X_BED_SIZE
+#define Y_MAX_POS Y_BED_SIZE
 #define Z_MAX_POS 180
 
 // Min software endstops curtail movement below minimum coordinate bounds
@@ -904,17 +909,17 @@
 #if ENABLED(AUTO_BED_LEVELING_LINEAR) || ENABLED(AUTO_BED_LEVELING_BILINEAR)
 
   // Set the number of grid points per dimension.
-  #define GRID_MAX_POINTS_X 3
+  #define GRID_MAX_POINTS_X 4
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   // Set the boundaries for probing (where the probe can reach).
   #define LEFT_PROBE_BED_POSITION X_MIN_POS + X_PROBE_OFFSET_FROM_EXTRUDER
-  #define RIGHT_PROBE_BED_POSITION X_MAX_POS - X_PROBE_OFFSET_FROM_EXTRUDER
-  #define FRONT_PROBE_BED_POSITION Y_MIN_POS - Y_PROBE_OFFSET_FROM_EXTRUDER // GKH: Firmware front maps to printer back. Subtract negative y-probe offset
+  #define RIGHT_PROBE_BED_POSITION X_MAX_POS - 10
+  #define FRONT_PROBE_BED_POSITION -1 * Y_PROBE_OFFSET_FROM_EXTRUDER // GKH: Firmware front maps to printer back. Subtract negative y-probe offset
   #define BACK_PROBE_BED_POSITION Y_MAX_POS + Y_PROBE_OFFSET_FROM_EXTRUDER  // GKH Firmware back maps to printer front. Add negative y-probe offset
 
   // The Z probe minimum outer margin (to validate G29 parameters).
-  #define MIN_PROBE_EDGE 5 // Default: 10
+  #define MIN_PROBE_EDGE 10
 
   // Probe along the Y axis, advancing X after each column
   //#define PROBE_Y_FIRST
@@ -923,7 +928,7 @@
 
     // Beyond the probed grid, continue the implied tilt?
     // Default is to maintain the height of the nearest edge.
-    //#define EXTRAPOLATE_BEYOND_GRID
+    #define EXTRAPOLATE_BEYOND_GRID
 
     //
     // Experimental Subdivision of the grid by Catmull-Rom method.
