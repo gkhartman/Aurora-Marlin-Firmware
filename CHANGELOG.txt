@@ -1,2 +1,5 @@
-7-10-2017: Modified stepper motor XY and E step count/mm for better calibration (could use further refining)
-11-17-2017: Updated firmware to version 1.1.6
+Aurora A3 Marlin Firmware Changelog
+-----------------------------------------------------------------------------------------
+07-10-2017: Modified stepper motor XY and E step count/mm for better calibration.
+11-17-2017: Updated firmware to version Marlin 1.1.6
+08-04-2018: Updated firmware to version Marlin 1.1.8
